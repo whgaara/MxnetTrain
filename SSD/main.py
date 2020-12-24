@@ -138,5 +138,15 @@ def train():
                 epoch + 1, 1 - acc_sum / n, mae_sum / m, time.time() - start))
 
 
+# X:(1, channel, height, weight)
+def predict(X, net):
+    ctx = d2l.try_gpu()
+    anchors, cls_preds, bbox_preds = net(X.as_in_context(ctx))
+    cls_probs = cls_preds.softmax().transpose((0, 2, 1))
+    output = contrib.nd.MultiBoxDetection(cls_probs, bbox_preds, anchors)
+    idx = [i for i, row in enumerate(output[0]) if row[0].asscalar() != -1]
+    return output[0, idx]
+
+
 if __name__ == '__main__':
     train()
