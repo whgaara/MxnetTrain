@@ -148,8 +148,7 @@ class Decoder(Block):
         decoder_context = nd.batch_dot(batch_attention, batch_encoder_outputs)
 
         # (1, 1, encoder_hidden_dim + decoder_hidden_dim)
-        input_and_context = nd.concat(self.embedding(cur_input).reshape(1, 1, self.hidden_size),
-                                      decoder_context, dim=2)
+        input_and_context = nd.concat(self.embedding(cur_input).reshape(1, 1, self.hidden_size), decoder_context, dim=2)
         # (1, 1, decoder_hidden_dim)
         concat_input = self.rnn_concat_input(input_and_context)
         concat_input = self.dropout(concat_input)
